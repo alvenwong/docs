@@ -144,12 +144,12 @@ kops delete cluster --name ${NAME} --yes
 kops validate cluster
 kubectl get nodes -o wide
 kubectl -n kube-system get po
+kubectl --namespace="sock-shop" get pods 
 kubectl create namespace sock-shop
 kubectl apply -f complete-demo.yaml
 kubectl delete namespace sock-shop
 kubectl --namespace=sock-shop describe service
 kubectl get svc --namespace=sock-shop -o wide
-kubectl get pods --namespace="sock-shop"
 ssh -i ~/.ssh/id_rsa admin@api.brown.wangzhuang93.com
 ```
 
