@@ -50,3 +50,41 @@ ixgbe_poll() <br>
 
 skb_copy_datagram_iter() <br>
 sock_def_readable() <br>
+
+# User space functions recv(), recvfrom() and recvmsg()
+SYSCALL_DEFINE4(recv, int, fd, void __user *, ubuf, size_t, size, unsigned int, flags) <br>
+-> __sys_recvfrom() <br>
+```
+sock = sockfd_lookup_light(fd, ...);
+```
+SYSCALL_DEFINE3(recvmsg, int, fd, struct user_msghdr __user *, msg, unsigned int, flags) <br>
+-> __sys_recvmsg() <br>
+
+SYSCALL_DEFINE6(recvfrom, int, fd, void __user *, ubuf, size_t, size, <br>
+		unsigned int, flags, struct sockaddr __user *, addr, int __user *, addr_len) <br>
+-> __sys_recvfrom() <br>
+
+-> sock_recvmsg() <br>
+-> sock_recvmsg_nosec() <br>
+-> sock->ops->recvmsg() = inet_recvmsg() <br>
+-> sk->sk_prot->recvmsg() = tcp_recvmsg() <br>
+-> |- skb_queue_walk() <br>
+&emsp; |- skb_copy_datagram_msg() -> skb_copy_datagram_iter() <br>
+
+
+# User space functions send(), sendto(), sendmsg()
+SYSCALL_DEFINE4(send, int, fd, void __user *, buff, size_t, len, unsigned int, flags) <br>
+-> __sys_sendto() <br>
+
+SYSCALL_DEFINE6(recvfrom, int, fd, void __user *, ubuf, size_t, size, <br>
+		unsigned int, flags, struct sockaddr __user *, addr, int __user *, addr_len) <br>
+-> __sys_recvfrom() <br>
+
+SYSCALL_DEFINE6(sendto, int, fd, void __user *, buff, size_t, len, <br>
+		unsigned int, flags, struct sockaddr __user *, addr, int, addr_len) <br>
+-> __sys_sendto() <br>
+
+sock_sendmsg() <br>
+sock_sendmsg_nosec() <br>
+sock->ops->sendmsg() = inet_sendmsg() <br>
+-> sk->sk_prot->sendmsg() = tcp_sendmsg() <br>
