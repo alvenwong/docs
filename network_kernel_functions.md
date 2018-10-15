@@ -1,7 +1,32 @@
 This file shows the function invocations of SKB process in the kernel.
 # Transmit a packet
-Include kernel functions from __tcp_transmit_skb() in the TCP layer to ixgbe_xmit_frame_ring() in the ethernet.
-The function invocation process from tcp_msgsend() to __tcp_transmit_skb() can be found in [RTT.md](https://github.com/alvenwong/docs/blob/master/RTT.md). <p>
+## Functions from APP layer to TCP layer
+There are three userspace functions for sockets to transmit packets: send(), sendmsg() and sendto(). <br>
+
+SYSCALL_DEFINE4(send, int, fd, void __user *, buff, size_t, len, unsigned int, flags) <br>
+-> __sys_sendto() <br>
+```
+struct socket sock = sockfd_lookup_light(fd, ...);
+```
+SYSCALL_DEFINE6(recvfrom, int, fd, void __user *, ubuf, size_t, size, <br>
+		unsigned int, flags, struct sockaddr __user *, addr, int __user *, addr_len) <br>
+-> __sys_recvfrom() <br>
+
+SYSCALL_DEFINE6(sendto, int, fd, void __user *, buff, size_t, len, <br>
+		unsigned int, flags, struct sockaddr __user *, addr, int, addr_len) <br>
+-> __sys_sendto() <br>
+
+sock_sendmsg() <br>
+-> sock_sendmsg_nosec() <br>
+-> sock->ops->sendmsg() = inet_sendmsg() <br>
+-> sk->sk_prot->sendmsg() = tcp_sendmsg() <br>
+-> tcp_sendmsg_locked() <br>
+-> tcp_push_one() <br>
+-> tcp_write_xmit() <br>
+-> __tcp_transmit_skb() (from this function on, skb is one of the arguments) <p>
+
+## Functinon from TCP layer to Ethernet
+Include kernel functions from __tcp_transmit_skb() in the TCP layer to ixgbe_xmit_frame_ring() in the ethernet. <p>
 __tcp_transmit_skb <br>
 -> ip_queue_xmit <br>
 -> ip_local_out <br>
@@ -26,10 +51,11 @@ __tcp_transmit_skb <br>
 -> ixgbe_xmit_frame_ring <br>
 
 # Receive a packet
-Include kernel functions from ixgbe_poll() in the ethernet to skb_copy_datagram_iter() in the TCP layer.
+## Functions from Ethernet layer to TCP layer
+Include kernel functions from ixgbe_poll() in the ethernet to __skb_queue_tail() in the TCP layer.
 ixgbe_poll() <br>
 -> ixgbe_clean_rx_irq() <br>
--> |- ixgbe_process_skb_fields() (from this function, skb is one of the arguments) -> eth_type_trans() <br>
+-> |- ixgbe_process_skb_fields() (from this function on, skb is one of the arguments) -> eth_type_trans() <br>
 -> |- ixgbe_rx_skb() -> <br>
 (napi_gro_receive()) <br>
 -> netif_rx() <br>
@@ -46,16 +72,15 @@ ixgbe_poll() <br>
 -> tcp_rcv_established() (sk->sk_state == TCP_ESTABLISHED) <br>
 -> tcp_data_queue() <br>
 -> tcp_queue_rcv() -> tcp_event_data_recv() <br>
--> __skb_queue_tail -> skb_set_owner_r() <br>
+-> |- __skb_queue_tail <br>
+&emsp; |- skb_set_owner_r() <br>
 
-skb_copy_datagram_iter() <br>
-sock_def_readable() <br>
-
-# User space functions recv(), recvfrom() and recvmsg()
+## Functions from APP layer to TCP layer
+There are three userspace functions for sockets to receive packets: recv(), recvmsg() and recvfrom(). <br>
 SYSCALL_DEFINE4(recv, int, fd, void __user *, ubuf, size_t, size, unsigned int, flags) <br>
 -> __sys_recvfrom() <br>
 ```
-sock = sockfd_lookup_light(fd, ...);
+struct socket sock = sockfd_lookup_light(fd, ...);
 ```
 SYSCALL_DEFINE3(recvmsg, int, fd, struct user_msghdr __user *, msg, unsigned int, flags) <br>
 -> __sys_recvmsg() <br>
@@ -69,26 +94,5 @@ SYSCALL_DEFINE6(recvfrom, int, fd, void __user *, ubuf, size_t, size, <br>
 -> sock->ops->recvmsg() = inet_recvmsg() <br>
 -> sk->sk_prot->recvmsg() = tcp_recvmsg() <br>
 -> |- skb_queue_walk() <br>
-&emsp; |- skb_copy_datagram_msg() -> skb_copy_datagram_iter() <br>
-
-
-# User space functions send(), sendto(), sendmsg()
-SYSCALL_DEFINE4(send, int, fd, void __user *, buff, size_t, len, unsigned int, flags) <br>
--> __sys_sendto() <br>
-
-SYSCALL_DEFINE6(recvfrom, int, fd, void __user *, ubuf, size_t, size, <br>
-		unsigned int, flags, struct sockaddr __user *, addr, int __user *, addr_len) <br>
--> __sys_recvfrom() <br>
-
-SYSCALL_DEFINE6(sendto, int, fd, void __user *, buff, size_t, len, <br>
-		unsigned int, flags, struct sockaddr __user *, addr, int, addr_len) <br>
--> __sys_sendto() <br>
-
-sock_sendmsg() <br>
-sock_sendmsg_nosec() <br>
-sock->ops->sendmsg() = inet_sendmsg() <br>
--> sk->sk_prot->sendmsg() = tcp_sendmsg() <br>
--> tcp_sendmsg_locked() <br>
--> tcp_push_one() <br>
--> tcp_write_xmit() <br>
--> __tcp_transmit_skb() <p>
+&emsp; |- skb_copy_datagram_msg() <br>
+&emsp; &emsp; -> skb_copy_datagram_iter() <br>
