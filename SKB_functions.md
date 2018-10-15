@@ -88,3 +88,7 @@ sock_sendmsg() <br>
 sock_sendmsg_nosec() <br>
 sock->ops->sendmsg() = inet_sendmsg() <br>
 -> sk->sk_prot->sendmsg() = tcp_sendmsg() <br>
+-> tcp_sendmsg_locked() <br>
+-> tcp_push_one() <br>
+-> tcp_write_xmit() <br>
+-> __tcp_transmit_skb() <p>
