@@ -8,10 +8,10 @@ SYSCALL_DEFINE4(send, int, fd, void __user *, buff, size_t, len, unsigned int, f
 ```
 struct socket sock = sockfd_lookup_light(fd, ...);
 ```
-SYSCALL_DEFINE6(recvfrom, int, fd, void __user *, ubuf, size_t, size, <br>
+SYSCALL_DEFINE6(recvfrom, int, fd, void __user *, ubuf, size_t, size,
 		unsigned int, flags, struct sockaddr __user *, addr, int __user *, addr_len) <br>
 -> __sys_recvfrom() <br>
-SYSCALL_DEFINE6(sendto, int, fd, void __user *, buff, size_t, len, <br>
+SYSCALL_DEFINE6(sendto, int, fd, void __user *, buff, size_t, len,
 		unsigned int, flags, struct sockaddr __user *, addr, int, addr_len) <br>
 -> __sys_sendto() <br>
 
@@ -25,7 +25,7 @@ SYSCALL_DEFINE6(sendto, int, fd, void __user *, buff, size_t, len, <br>
 -> __tcp_transmit_skb() (from this function on, skb is one of the arguments) <p>
 
 ## Functinon from TCP layer to Ethernet
-Include kernel functions from __tcp_transmit_skb() in the TCP layer to ixgbe_xmit_frame_ring() in the ethernet. <p>
+Include kernel functions from __tcp_transmit_skb() in the TCP layer to ixgbe_xmit_frame_ring() in the ethernet. <br>
 __tcp_transmit_skb <br>
 -> ip_queue_xmit() <br>
 -> ip_local_out() <br>
@@ -51,7 +51,7 @@ __tcp_transmit_skb <br>
 
 # Receive a packet
 ## Functions from Ethernet layer to TCP layer
-Include kernel functions from ixgbe_poll() in the ethernet to __skb_queue_tail() in the TCP layer.
+Include kernel functions from ixgbe_poll() in the ethernet to __skb_queue_tail() in the TCP layer. <br>
 ixgbe_poll() <br>
 -> ixgbe_clean_rx_irq() <br>
 -> |- ixgbe_process_skb_fields() (from this function on, skb is one of the arguments) -> eth_type_trans() <br>
@@ -83,7 +83,7 @@ struct socket sock = sockfd_lookup_light(fd, ...);
 ```
 SYSCALL_DEFINE3(recvmsg, int, fd, struct user_msghdr __user *, msg, unsigned int, flags) <br>
 -> __sys_recvmsg() <br>
-SYSCALL_DEFINE6(recvfrom, int, fd, void __user *, ubuf, size_t, size, <br>
+SYSCALL_DEFINE6(recvfrom, int, fd, void __user *, ubuf, size_t, size,
 		unsigned int, flags, struct sockaddr __user *, addr, int __user *, addr_len) <br>
 -> __sys_recvfrom() <br>
 
