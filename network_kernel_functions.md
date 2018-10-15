@@ -11,12 +11,11 @@ struct socket sock = sockfd_lookup_light(fd, ...);
 SYSCALL_DEFINE6(recvfrom, int, fd, void __user *, ubuf, size_t, size, <br>
 		unsigned int, flags, struct sockaddr __user *, addr, int __user *, addr_len) <br>
 -> __sys_recvfrom() <br>
-
 SYSCALL_DEFINE6(sendto, int, fd, void __user *, buff, size_t, len, <br>
 		unsigned int, flags, struct sockaddr __user *, addr, int, addr_len) <br>
 -> __sys_sendto() <br>
 
-sock_sendmsg() <br>
+-> sock_sendmsg() <br>
 -> sock_sendmsg_nosec() <br>
 -> sock->ops->sendmsg() = inet_sendmsg() <br>
 -> sk->sk_prot->sendmsg() = tcp_sendmsg() <br>
@@ -28,27 +27,27 @@ sock_sendmsg() <br>
 ## Functinon from TCP layer to Ethernet
 Include kernel functions from __tcp_transmit_skb() in the TCP layer to ixgbe_xmit_frame_ring() in the ethernet. <p>
 __tcp_transmit_skb <br>
--> ip_queue_xmit <br>
--> ip_local_out <br>
--> __ip_local_out <br>
--> dst_output <br>
--> ip_output <br>
--> ip_finish_output <br>
--> ip_finish_output_gso <br>
--> ip_finish_output2 <br>
--> dst_neigh_output <br>
--> neigh_hh_output <br>
--> dev_queue_xmit <br>
--> __dev_queue_xmit <br>
--> __dev_xmit_skb <br>
--> sch_direct_xmit <br>
--> dev_hard_start_xmit <br>
--> xmit_one <br>
--> netdev_start_xmit <br>
--> __netdev_start_xmit <br>
--> ixgbe_xmit_frame <br>
--> __ixgbe_xmit_frame <br>
--> ixgbe_xmit_frame_ring <br>
+-> ip_queue_xmit() <br>
+-> ip_local_out() <br>
+-> __ip_local_out() <br>
+-> dst_output() <br>
+-> ip_output() <br>
+-> ip_finish_output() <br>
+-> ip_finish_output_gso() <br>
+-> ip_finish_output2() <br>
+-> dst_neigh_output() <br>
+-> neigh_hh_output() <br>
+-> dev_queue_xmit() <br>
+-> __dev_queue_xmit() <br>
+-> __dev_xmit_skb() <br>
+-> sch_direct_xmit() <br>
+-> dev_hard_start_xmit() <br>
+-> xmit_one() <br>
+-> netdev_start_xmit() <br>
+-> __netdev_start_xmit() <br>
+-> ixgbe_xmit_frame() <br>
+-> __ixgbe_xmit_frame() <br>
+-> ixgbe_xmit_frame_ring() <br>
 
 # Receive a packet
 ## Functions from Ethernet layer to TCP layer
@@ -84,7 +83,6 @@ struct socket sock = sockfd_lookup_light(fd, ...);
 ```
 SYSCALL_DEFINE3(recvmsg, int, fd, struct user_msghdr __user *, msg, unsigned int, flags) <br>
 -> __sys_recvmsg() <br>
-
 SYSCALL_DEFINE6(recvfrom, int, fd, void __user *, ubuf, size_t, size, <br>
 		unsigned int, flags, struct sockaddr __user *, addr, int __user *, addr_len) <br>
 -> __sys_recvfrom() <br>
