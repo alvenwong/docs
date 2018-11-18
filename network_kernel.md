@@ -38,10 +38,9 @@ __tcp_transmit_skb() <br>
 -> dst_neigh_output() <br>
 -> neigh_hh_output() <br>
 -> dev_queue_xmit() <br>
--> __dev_queue_xmit() <br>
+-> __dev_queue_xmit() -> dev_hard_start_xmit() (loopback) <br>
 -> __dev_xmit_skb() <br>
 -> sch_direct_xmit() <br>
--> dev_hard_start_xmit() <br>
 -> xmit_one() <br>
 -> netdev_start_xmit() <br>
 -> __netdev_start_xmit() <br>
