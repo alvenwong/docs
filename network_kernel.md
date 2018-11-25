@@ -77,7 +77,7 @@ The Programmable Interrupt Controller (PIC) monitors the IRQ lines, checking for
 
 PIC waits until the CPU acknowledges the interrupt signal by writing into one of the Programmable Interrupt Controllers (PIC) I/O ports; when this occurs, clears the INTR line. <p>
 
-When receiving an interrupt signal, do_IRQ(n) will be invoked to handle this interrupt. 
+When receiving an interrupt signal, do_IRQ(n) will be invoked to handle this interrupt. <br>
 do_IRQ() <br>
 // update task cpu time, irq time and preempt counter <br>
 -> |- irq_enter() -> account_irq_enter_time() <br>
