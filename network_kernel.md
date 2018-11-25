@@ -1,4 +1,4 @@
-This file shows the function invocations in the kernel when transmiting or receiving packets.
+This file shows the function invocations in the kernel when transmitting or receiving packets.
 # Transmit Packets
 ## Functions from APP layer to TCP layer
 There are three userspace functions for sockets to transmit packets: send(), sendmsg() and sendto(). <br>
@@ -24,7 +24,7 @@ SYSCALL_DEFINE6(sendto, int, fd, void __user *, buff, size_t, len,
 -> tcp_write_xmit() <br>
 -> __tcp_transmit_skb() (from this function on, skb is one of the arguments) <p>
 
-## Functinon from TCP layer to Ethernet
+## Functinon from TCP layer to net device
 Include kernel functions from __tcp_transmit_skb() in the TCP layer to ixgbe_xmit_frame_ring() in the ethernet. <br>
 __tcp_transmit_skb() <br>
 -> ip_queue_xmit() <br>
