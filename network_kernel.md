@@ -65,6 +65,7 @@ net_tx_action() <br>
 -> xmit_one() <br>
 -> netdev_start_xmit() <br>
 -> __netdev_start_xmit() <br>
+-> ndo_start_xmit() <br>
 
 # Receive Packets
 
