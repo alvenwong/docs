@@ -1,5 +1,5 @@
 This file shows the function invocations in the kernel when transmiting or receiving packets.
-# Transmit a packet
+# Transmit Packets
 ## Functions from APP layer to TCP layer
 There are three userspace functions for sockets to transmit packets: send(), sendmsg() and sendto(). <br>
 
@@ -39,17 +39,34 @@ __tcp_transmit_skb() <br>
 -> neigh_hh_output() <br>
 -> dev_queue_xmit() <br>
 -> __dev_queue_xmit() -> dev_hard_start_xmit() (loopback) <br>
--> __dev_xmit_skb() -> qdisc->enqueue() <br>
+-> __dev_xmit_skb() -> qdisc->enqueue() (I/O Interrupt) <br>
 -> sch_direct_xmit() <br>
 -> dev_hard_start_xmit() <br> 
 -> xmit_one() <br>
 -> netdev_start_xmit() <br>
 -> __netdev_start_xmit() <br>
--> ixgbe_xmit_frame() <br>
--> __ixgbe_xmit_frame() <br>
--> ixgbe_xmit_frame_ring() <br>
 
-# Receive a packet
+## I/O Interrupts
+```
+static int __init net_dev_init(void)
+{
+	open_softirq(NET_TX_SOFTIRQ, net_tx_action);
+	open_softirq(NET_RX_SOFTIRQ, net_rx_action);
+}
+```
+The hardware devices periodically raise signals (NET_RX_SOFTIRQ) to transmit packets from QDisc.
+net_tx_action() <br>
+-> qdisc_run() <br>
+-> __qdisc_run <br>
+-> qdisc_restart() <br>
+-> dequeue_skb() <br>
+-> sch_direct_xmit() <br>
+-> dev_hard_start_xmit() <br> 
+-> xmit_one() <br>
+-> netdev_start_xmit() <br>
+-> __netdev_start_xmit() <br>
+
+# Receive Packets
 
 ## I/O Interrupts
 <img align="center" src="https://github.com/alvenwong/docs/blob/master/IO_Interrupt.png" width="500"> <p>
