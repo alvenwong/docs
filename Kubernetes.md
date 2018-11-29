@@ -139,9 +139,10 @@ Delete the cluster
 kops delete cluster --name ${NAME} --yes
 ```
 
-# kubectl commands
+# Basic kubectl commands
 ```bash
 kops validate cluster
+kubectl get namespace
 kubectl get nodes -o wide
 kubectl -n kube-system get po
 kubectl --namespace="sock-shop" get pods 
