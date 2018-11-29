@@ -175,6 +175,7 @@ kubectl create namespace sock-shop
 ```
 Run this microservices demo
 ```bash
+cd deploy/kubernetes/
 kubectl apply -f complete-demo.yaml
 ```
 Delete the demo
