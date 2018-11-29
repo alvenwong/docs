@@ -116,7 +116,7 @@ subdomain.example.com.        172800  IN  NS  ns-4.awsdns-4.co.uk.
 ```bash
 aws s3api create-bucket --bucket brown-wangzhuang93-com-state-store --region us-east-1
 aws s3api put-bucket-versioning --bucket brown-wangzhuang93-com-state-store  --versioning-configuration Status=Enabled
-aws s3api put-bucket-encryption --bucket brown-wangzhuang93-com-state-store --server-side-encryption-configuration ‘{"Rules":[{"ApplyServerSideEncryptionByDefault":{"SSEAlgorithm":"AES256"}}]}'
+aws s3api put-bucket-encryption --bucket brown-wangzhuang93-com-state-store --server-side-encryption-configuration '{"Rules":[{"ApplyServerSideEncryptionByDefault":{"SSEAlgorithm":"AES256"}}]}'
 ```
 Recommand to set the region as us-east-1. 
 
