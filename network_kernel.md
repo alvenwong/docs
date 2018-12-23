@@ -20,7 +20,7 @@ SYSCALL_DEFINE6(sendto, int, fd, void __user *, buff, size_t, len,
 -> sock->ops->sendmsg() = inet_sendmsg() <br>
 -> sk->sk_prot->sendmsg() = tcp_sendmsg() <br>
 -> tcp_sendmsg_locked() -> tcp_write_queue_tail() -> skb_add_data_nocache(skb) <br>
--> tcp_push_one() <br>
+-> tcp_push() <br>
 -> tcp_write_xmit() -> tcp_send_head() <br>
 -> __tcp_transmit_skb() (from this function on, skb is one of the arguments) <p>
 
